@@ -1,14 +1,19 @@
 # Indian-LawChatbot
 A chatbot designed to assist users with legal queries. It uses Retrieval-Augmented Generation (RAG) architecture to retrieve context from legal documents and answer queries using the Llama2 Large Language Model.
 
-# Downloading LLM
+# Downloading Llama2 chat models
 1. Click [Here](https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGUF/blob/main/llama-2-7b-chat.Q4_K_M.gguf) to download the Llama2 7b model
 2. Click [Here](https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF/blob/main/llama-2-13b-chat.Q4_K_M.gguf) to download the Llama2 13b model
 3. Make a "Models"(Case sensitive) folder in the directory and store the models in that folder
 
 # Adding more legal documents (Optional)
 You can add more legal documents to the "Data" folder to add more context and cover a wider range of queries
-   
+
+# Using Nvidia GPU (Optional)
+If you have Nvidia hardware on your device, you can offload the tasks to Nvidia GPU.<br>
+To do that you have to go to [this](https://pytorch.org/get-started/locally/) website, copy the command to install the pytorch version.<br>
+Once installed, the GPU will be automatically used to generate embeddings and responses faster
+
 # Running the app
 1. Open a terminal where the repository is downloaded
 2. Install all requirements using the command "pip install -r requirements.txt" in terminal
