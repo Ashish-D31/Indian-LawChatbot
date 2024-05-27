@@ -1,28 +1,31 @@
-from langchain_text_splitters import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders import PyPDFDirectoryLoader
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_text_splitters import CharacterTextSplitter
+import PyPDF2
+import time
 import torch
 
-def make_vectorstores():
-    loader = PyPDFDirectoryLoader('Data/')
-    text = ''
-    docs = loader.load()
-    for page in docs:
-        text += page.page_content
+print('Loading model ...')
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+embeddings = HuggingFaceEmbeddings(model_name = 'multi-qa-mpnet-base-dot-v1' , model_kwargs = {'device': device})
 
-    text_splitter = CharacterTextSplitter(
-        chunk_size = 1024,
-        chunk_overlap = 128,
-        length_function = len
+print('Processing text ...')
+reader = PyPDF2.PdfReader('data/ipc_law.pdf')
+text = ''
+for page in reader.pages:
+    text += page.extract_text()
+
+#split text into chunks
+text_splitter = CharacterTextSplitter(
+    separator = '\n',
+    chunk_size = 512,
+    chunk_overlap = 64,
+    length_function = len
     )
+chunks = text_splitter.split_text(text)
 
-    chunks = text_splitter.split_text(text)
-    
-    device = ("cuda" if torch.cuda.is_available() else "cpu")
-    embeddings = HuggingFaceEmbeddings(model_name = 'multi-qa-mpnet-base-dot-v1' , model_kwargs = {'device': device})
-
-    vectorstore = FAISS.from_texts(chunks , embeddings)
-    vectorstore.save_local('vectorstore/')
-
-make_vectorstores()
+time1 = time.time()
+print('Storing embedding ...')
+vectordb = FAISS.from_texts(chunks, embeddings)
+vectordb.save_local('vectorstore')
+print("Time required : ", time.time() - time1)
