@@ -3,3 +3,4 @@ langchain
 streamlit
 torch
 PyPDF2
+faiss-cpu
