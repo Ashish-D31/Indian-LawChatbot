@@ -1,6 +1,7 @@
 langchain-community
 langchain
 streamlit
-torch
 PyPDF2
 faiss-cpu
+llama-cpp-python
+sentence-transformers
